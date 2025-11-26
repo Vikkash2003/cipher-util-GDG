@@ -1,1 +1,6 @@
-# Wow you came back this far? You must be really good at digging stuff up huh?
+def main():
+    print("Hello, World! You should probably check out this url: https://thegovernorsgambit.devfest.gdgsrilanka.org/asdfghjklzxcvbnmqwertyuiop")
+
+
+if __name__ == "__main__":
+    main()
