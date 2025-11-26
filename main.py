@@ -14,10 +14,43 @@ def main():
             vTable = createVigenereTable(vKeyword)
         else:
             vTable = createNormalVigenereTable()
-
+        
+        vdict = createDict(vTable[0])
+        
+        try:
+            while True:
+                choice = input("Encrypt or Decrypt? (E/D): ").upper()
+                if choice == 'E':
+                    plaintext = getValidInput("Enter plaintext: ").upper()
+                    ciphertext = encrypt(plaintext, keyword, vTable, vdict)
+                    print("Ciphertext: ", ciphertext.lower())
+                # elif choice == 'D':
+                #     ciphertext = getValidInput("Enter ciphertext: ").upper()
+                #     plaintext = decrypt(ciphertext, keyword, vTable, vdict)
+                #     print("Plaintext: ", plaintext.lower())
+                elif choice == "EXIT":
+                    break
+        except KeyboardInterrupt:
+            print("\nExiting...")
+            raise
     except KeyboardInterrupt:
         print("\nExiting...")
         raise
+
+def encrypt(plaintext, keyword, table, dict):
+    ciphertext = ""
+    plaintext = plaintext.upper().replace(" ", "")
+    keyword = keyword.upper()
+    for key in plaintext:
+        ciphertext += table[dict[key]][dict[keyword[0]]]
+        keyword = shiftKeyword(keyword, 1)
+    return ciphertext
+
+
+def shiftKeyword(keyword, shift):
+    shiftedKeyword = keyword[shift:] + keyword[:shift]
+    return shiftedKeyword
+
 
 
 def createVigenereTable(keyword):
@@ -51,6 +84,18 @@ def validateInput(text):
         if not (char.isalpha() or char == ' '):
             return False
     return True
+
+def getValidInput(prompt):
+    while True:
+        try:
+            user_input = input(prompt)
+            if validateInput(user_input)
+                return user_input
+            print("CAREFUL:For the keyed alphabet, you need a word that doesn't contain duplicate letters. ")
+        except KeyboardInterrupt:
+            print("\nExiting...")
+            raise
+
 
 
 
