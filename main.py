@@ -8,7 +8,7 @@ def main():
             while True:
                 vKeyword = getValidInput("Enter keyword for Vigenere Table: ")
                 vKeyword = vKeyword.upper().replace(" ", "")
-                if not hasDuplicateLetters(vKeyword):
+                if not hasDuplicateLetter(vKeyword):
                     break
                 print("Keyword cannot contain duplicate letters. Please try again.")
             vTable = createVigenereTable(vKeyword)
@@ -41,21 +41,23 @@ def encrypt(plaintext, keyword, table, dict):
     ciphertext = ""
     plaintext = plaintext.upper().replace(" ", "")
     keyword = keyword.upper()
-    for key in plaintext:
-        ciphertext += table[dict[key]][dict[keyword[0]]]
-        keyword = shiftKeyword(keyword, 1)
+    klen = len(keyword)
+    for i, char in enumerate(plaintext):
+        row = dict[keyword[i % klen]]
+        col = dict[char]
+        ciphertext += table[row][col]
     return ciphertext
 
 def decrypt(ciphertext, keyword, table, dict):
     plaintext = ""
     ciphertext = ciphertext.upper().replace(" ", "")
     keyword = keyword.upper()
-    for key in ciphertext:
-        alphabet = createAlphabet(keyword[0], dict)
-        ciphertext_index = alphabet.index(key)
-        plaintext += table[0][ciphertext_index]
-        keyword = shiftKeyword(keyword, 1)
-    return ciphertext
+    klen = len(keyword)
+    for i, char in enumerate(ciphertext):
+        row = dict[keyword[i % klen]]
+        col = table[row].index(char)
+        plaintext += table[0][col]
+    return plaintext
 
 
 def shiftKeyword(keyword, shift):
@@ -88,13 +90,13 @@ def createNormalVigenereTable():
     table = []
     for i in range(26):
         table.append(alphabet[i:] + alphabet[:i])
-    return 
+    return table
     
 
 def createDict(List):
     dict = {}
     for i, key in enumerate(List):
-        dict[key] == i
+        dict[key] = i
     return dict
 
 
@@ -125,7 +127,7 @@ def getValidInput(prompt):
     while True:
         try:
             user_input = input(prompt)
-            if validateInput(user_input)
+            if validateInput(user_input):
                 return user_input
             print("Invalid input. Only letters and spaces are allowed. Please try again.")
         except KeyboardInterrupt:
